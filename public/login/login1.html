@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../javascripts/jquery-2.1.0.js"></script>
+    <script>
+        function sub() {
+            var sendData = {userName:document.getElementById("userName").value,password:document.getElementById("password").value};
+            $.get("tsconfig.json",sendData,function(ret) {
+                if (ret.state == 0) {
+                    var nameObj = document.getElementById("userName");
+                    nameObj.select();
+                    nameObj.focus();
+                    alert("名称错误");
+                }
+                if (ret.state ==1) {
+                    var passwordObj = document.getElementById("password");
+                    passwordObj.select();
+                    passwordObj.focus();
+                    alert("密码错误");
+                }
+                if (ret.state == 2) {
+                    alert("成功");
+                }
+            });
+        }
+
+
+    </script>
+</head>
+<br>
+<input type = "text" id = "userName" value = ""></br>
+<input type="password" id = "password" ></br>
+<input type = "button" onclick = "sub()" value = "提交">
+</body>
+</html>

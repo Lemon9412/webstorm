@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script>
+        function sub() {
+            //获取了兼容的xhr对象。
+            var xhr =getXHR();
+            //发送请求周期比较长，onreadystatechange对应的函数由浏览器监控执行。
+            //当请求状态改变时调用，发送状态--接受响应--出错状态
+            //所以服务器正确响应之后的程序放在函数中。
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status== 200||xhr.status ==304) {
+                        var ret = JSON.parse(xhr.responseText);
+                        if (ret.state == 0) {
+                            var nameObj = document.getElementById("userName");
+                            nameObj.select();
+                            nameObj.focus();
+                            alert("名称错误");
+                        }
+                        if (ret.state ==1) {
+                            var passwordObj = document.getElementById("password");
+                            passwordObj.select();
+                            passwordObj.focus();
+                            alert("密码错误");
+                        }
+                        if (ret.state == 2) {
+                            alert("成功");
+                        }
+                    }
+                }
+            }
+            xhr.open("post","../login");
+            //向服务器发送请求连带的数据，
+            //对应get请求，无意义参数为null即
+            var sendData = {userName:document.getElementById("userName").value,password:document.getElementById("password").value};
+            //在post请求时，需要设定响应头信息，目的是通知服务器端当前数据已经经过url编码，此时服务器才能接收。
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            //手动的把js对象变成字符串。
+            xhr.send("param="+JSON.stringify(sendData));
+        }
+        function getXHR() {
+            if(window.XMLHttpRequest) {//非ie老版本
+                return new XMLHttpRequest;
+            } else if(window.ActiveXObject) {//ie老版本
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="userName" value=""><br>
+    <input type="password" id="password">
+    <input type="button" onclick="sub()" value="提交">
+</body>
+</html>
